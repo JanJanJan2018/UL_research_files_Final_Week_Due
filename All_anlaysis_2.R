@@ -3438,7 +3438,7 @@ Meta_DE_Stats <- read.csv('metaGviz_DE_Stats_16.csv', sep=',',
                           na.strings=c('','NA'))#16X16
 
 DE <- Meta_DE_Stats[,c(1,2)] #16X2
-StatsDE <- merge(DE, StatsGviz16, by.x='gene', by.y='gene') #32X147
+StatsDE <- merge(DE, StatsGviz16, by.x='genes', by.y='gene') #32X147
 
 # install.packages('caret')
 # install.packages('randomForest')
@@ -3487,9 +3487,6 @@ summary(samplesType$TYPE)
 write.csv(samplesType, 'samplesType.csv', row.names=TRUE)
 samplesType <- read.csv('samplesType.csv', header=TRUE, row.names=1)#121X17
 colnames(samplesType)
-# [1] "TYPE"     "ARHGDIA"  "BET1L"    "CANT1"    "CBX2"   "CCDC57"   "CYTH4"    "FASN"    
-# [9] "FSCN2"    "SOCS3"    "HMGA2"    "IRF7"     "NOL12"    "ASPSCR1"     "SLC25A10" "SLC38A10"
-# [17] "TNRC6B"
 
 set.seed(189678345) # this will reproduce the same numbers each time sampling is done
 # run set.seed value to get exact results, otherwise results differ
@@ -3523,7 +3520,7 @@ dev.off()
 
 # linkage dirichlet allocation model
 ldaMod <- train(TYPE~., method='lda', data=trainingSet)
-
+#plot(ldaMod) #error, no tuning parameters
 # the ldaMod cannot be plotted, 'no tuning parameters for this model'
 
 # run predictions on the testing set
@@ -3533,18 +3530,19 @@ predlda <- predict(ldaMod, testingSet)
 
 predDF <- data.frame(predRF, predGbm, predlda, type=testingSet$TYPE)
 predDF
-#predRF predGbm predlda  type
-# 1      UL      UL   nonUL nonUL
+predDF
+# predRF predGbm predlda  type
+# 1   nonUL      UL   nonUL nonUL
 # 2   nonUL   nonUL   nonUL nonUL
 # 3   nonUL   nonUL   nonUL nonUL
 # 4   nonUL   nonUL   nonUL nonUL
-# 5   nonUL   nonUL   nonUL nonUL
+# 5      UL   nonUL   nonUL nonUL
 # 6   nonUL   nonUL   nonUL nonUL
 # 7   nonUL   nonUL   nonUL nonUL
-# 8   nonUL      UL   nonUL nonUL
+# 8   nonUL   nonUL   nonUL nonUL
 # 9   nonUL   nonUL   nonUL nonUL
-# 10     UL   nonUL   nonUL nonUL
-# 11     UL      UL   nonUL nonUL
+# 10     UL      UL   nonUL nonUL
+# 11     UL      UL      UL nonUL
 # 12  nonUL   nonUL   nonUL nonUL
 # 13     UL      UL   nonUL nonUL
 # 14  nonUL   nonUL   nonUL nonUL
@@ -3560,51 +3558,51 @@ predDF
 # 24     UL      UL      UL    UL
 # 25     UL      UL      UL    UL
 # 26     UL      UL   nonUL    UL
-# 27     UL      UL   nonUL    UL
+# 27     UL   nonUL   nonUL    UL
 # 28     UL      UL      UL    UL
-# 29  nonUL   nonUL   nonUL    UL
+# 29  nonUL   nonUL      UL    UL
 # 30  nonUL   nonUL      UL    UL
 # 31  nonUL   nonUL   nonUL    UL
-# 32     UL      UL   nonUL    UL
+# 32  nonUL      UL   nonUL    UL
 # 33  nonUL   nonUL   nonUL    UL
-# 34     UL   nonUL   nonUL    UL
+# 34     UL   nonUL      UL    UL
 # 35     UL      UL   nonUL    UL
 
 CombinedModels <- train(type~., method='gam', data=predDF)
 CombinedPredictions <- predict(CombinedModels, predDF)
 CombinedPredictions
-# [1] UL    nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL UL    UL    nonUL UL    nonUL nonUL
-# [16] nonUL UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL UL   
-# [31] nonUL UL    nonUL UL    UL 
+# [1] nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL UL    nonUL nonUL nonUL nonUL nonUL
+# [17] UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL nonUL UL    UL    UL    nonUL nonUL
+# [33] nonUL UL    nonUL
 
 predRF
-# [1] UL    nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL UL    UL    nonUL UL    nonUL nonUL
-# [16] nonUL UL    UL    UL    UL    UL    nonUL UL    UL    UL    UL    UL    UL    nonUL nonUL
-# [31] nonUL UL    nonUL UL    UL   
+# [1] nonUL nonUL nonUL nonUL UL    nonUL nonUL nonUL nonUL UL    UL    nonUL UL    nonUL nonUL nonUL
+# [17] UL    UL    UL    UL    UL    nonUL UL    UL    UL    UL    UL    UL    nonUL nonUL nonUL nonUL
+# [33] nonUL UL    UL
 
 predGbm
-# [1] UL    nonUL nonUL nonUL nonUL nonUL nonUL UL    nonUL nonUL UL    nonUL UL    nonUL nonUL
-# [16] nonUL UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL nonUL
-# [31] nonUL UL    nonUL nonUL UL   
+# [1] UL    nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL UL    UL    nonUL UL    nonUL nonUL nonUL
+# [17] UL    UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL UL    nonUL nonUL nonUL UL   
+# [33] nonUL nonUL UL
 
 predlda
-# [1] nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL
-# [16] nonUL UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL nonUL UL    nonUL UL   
-# [31] nonUL nonUL nonUL nonUL nonUL
+# [1] nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL nonUL UL    nonUL nonUL nonUL nonUL nonUL
+# [17] UL    UL    UL    UL    UL    UL    UL    UL    UL    nonUL nonUL UL    UL    UL    nonUL nonUL
+# [33] nonUL UL    nonUL
 
-sum <- sum(CombinedPredictions==testingSet$TYPE)#28
-length <- length(CombinedPredictions)#35
+sum <- sum(CombinedPredictions==testingSet$TYPE)
+length <- length(CombinedPredictions)
 
-sum <- sum(predRF==testingSet$TYPE) #24
-length <- length(predRF)#35
-accuracy_rfMOd <- (sum/length) #[1] 0.6857143
+sum <- sum(predRF==testingSet$TYPE) 
+length <- length(predRF)
+accuracy_rfMOd <- (sum/length) 
 
-sum <- sum(predGbm==testingSet$TYPE)#25
-accuracy_gbmMod <- sum/length # [1] 0.6857143
+sum <- sum(predGbm==testingSet$TYPE)
+accuracy_gbmMod <- sum/length 
 
 
-sum <- sum(predlda==testingSet$TYPE) #26
-accuracy_ldaMod <- sum/length #[1] 0.7428571
+sum <- sum(predlda==testingSet$TYPE) 
+accuracy_ldaMod <- sum/length
 
 rf2 <- randomForest(TYPE~., data=trainingSet, method='class')
 
@@ -3614,7 +3612,7 @@ dev.off()
 
 predRF2 <- predict(rf2, testingSet, type='class')
 predRF2
-# gsm1667145   gsm336254   gsm336258   gsm336260   gsm336270   gsm336273   gsm336276    gsm52662 
+# gsm1667145   gsm336254   gsm336258   gsm336260   gsm336270   gsm336273   gsm336276    gsm52662
 # UL       nonUL       nonUL       nonUL          UL       nonUL       nonUL       nonUL 
 # gsm52663    gsm52665    gsm52667    gsm52669     gsm9099   gsm569425   gsm569427 gsm336202ul 
 # nonUL          UL          UL       nonUL          UL       nonUL       nonUL       nonUL 
@@ -3625,8 +3623,8 @@ predRF2
 # gsm38692ul   gsm9094ul gsm569429ul 
 # nonUL          UL          UL 
 
-sum <- sum(predRF2==testingSet$TYPE)#23
-accuracy_RF2 <- sum/length #[1] 0.6571429
+sum <- sum(predRF2==testingSet$TYPE)
+accuracy_RF2 <- sum/length 
 
 confusionMatrix(predRF2, testingSet$TYPE)
 # Confusion Matrix and Statistics
@@ -3654,21 +3652,20 @@ confusionMatrix(predRF2, testingSet$TYPE)
 #    Detection Prevalence : 0.4857          
 #       Balanced Accuracy : 0.6583          
 #                                           
-#        'Positive' Class : nonUL     
+#        'Positive' Class : nonUL  
 
 predDF2 <- data.frame(predRF,predRF2,predlda, predGbm, testingSet$TYPE)
 colnames(predDF2)[5] <- 'TYPE'
 
 CombinedModels <- train(TYPE ~ ., method='gam', data=predDF2)
 CombinedPredictions2 <- predict(CombinedModels, predDF)
-sum <- sum(CombinedPredictions2==testingSet$TYPE)#29
-length(CombinedPredictions2)#35
-accuracy_CombinedPredictions2 <- sum/length #[1] 0.8285714
+sum <- sum(CombinedPredictions2==testingSet$TYPE)
+length(CombinedPredictions2)
+accuracy_CombinedPredictions2 <- sum/length 
 
 predDF3 <- data.frame(predRF,predRF2,predlda, predGbm, 
                       CombinedPredictions2, testingSet$TYPE)#35X6
-colnames(predDF3)[6] <- 'TYPE'
-
+colnames(predDF3) <- c('RF','RF2','LDA','GBM','Combined','Type')
 
 results <- c(round(accuracy_rfMOd,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
@@ -3676,6 +3673,7 @@ results <- c(round(accuracy_rfMOd,2), round(accuracy_RF2,2),
 results <- as.factor(results)
 results <- t(data.frame(results))#1X6
 colnames(results) <- colnames(predDF3)
+colnames(results) <- c('RF','RF2','LDA','GBM','Combined','Type')
 Results <- rbind(predDF3, results) #36X6
 
 write.csv(Results, 'Results_predictions_TOP16.csv', row.names=TRUE)
@@ -3684,14 +3682,21 @@ write.csv(Results, 'Results_predictions_TOP16.csv', row.names=TRUE)
 knnMod <- train(TYPE ~ .,
                 method='knn', preProcess=c('center','scale'),
                 tuneLength=10, trControl=trainControl(method='cv'), data=trainingSet)#list 23
+
+png('knn_top16.png', width=576, height=768)
 plot(knnMod)
+dev.off()
 
 rpartMod <- train(TYPE ~ ., method='rpart', tuneLength=9, data=trainingSet) #lists 23
-plot(rpart)
+
+png('rpartMod_top16.png', width=576,height=768)
+plot(rpartMod)
+dev.off()
 
 glmMod <- train(TYPE ~ ., 
                 method='glm', data=trainingSet) #list of 23, 32 warnings
-#plot(glmMod)#errors
+
+#plot(glmMod)#errors, no tuning parameters
 
 predKNN <- predict(knnMod, testingSet)
 predRPART <- predict(rpartMod, testingSet)
@@ -3699,22 +3704,22 @@ predGLM <- predict(glmMod, testingSet)
 
 
 
-length=length(testingSet$TYPE)#36
+length=length(testingSet$TYPE)#35
 
-sumKNN <- sum(predKNN==testingSet$TYPE)#25
-sumRPart <- sum(predRPART==testingSet$TYPE)#19
-sumGLM <- sum(predGLM==testingSet$TYPE)#26
+sumKNN <- sum(predKNN==testingSet$TYPE)
+sumRPart <- sum(predRPART==testingSet$TYPE)
+sumGLM <- sum(predGLM==testingSet$TYPE)
 
-accuracy_KNN <- sumKNN/length #0.7143
-accuracy_RPART <- sumRPart/length #0.543
-accuracy_GLM <- sumGLM/length #0.743
+accuracy_KNN <- sumKNN/length 
+accuracy_RPART <- sumRPart/length 
+accuracy_GLM <- sumGLM/length 
 
 predDF3 <- data.frame(predDF2[,1:4],predKNN,predRPART,predGLM, 
                       TYPE=testingSet$TYPE)
 
 CombinedModels <- train(TYPE ~ ., method='gam', data=predDF3)
 CombinedPredictions2 <- predict(CombinedModels, predDF3)
-accuracy_CP2 <- sum(CombinedPredictions2==testingSet$TYPE)/length #0.826
+accuracy_CP2 <- sum(CombinedPredictions2==testingSet$TYPE)/length
 
 predDF4 <- data.frame(predDF3[,1:7], CombinedPredictions2, TYPE=testingSet$TYPE)#35X9
 colnames(predDF4)
@@ -3722,15 +3727,17 @@ colnames(predDF4)
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
 
+colnames(predDF4) <- c('RF','RF2','LDA','GBM','KNN','RPART','GLM','Combined','Type')
+
 results <- c(round(accuracy_rfMOd,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
              round(accuracy_KNN,2), round(accuracy_RPART,2),
              round(accuracy_GLM,2), 
              round(accuracy_CP2,2), round(100,2))
 results <- as.factor(results)
-results <- t(data.frame(results))#1X6
+results <- t(data.frame(results))
 colnames(results) <- colnames(predDF4)
-Results <- rbind(predDF4, results) #36X9
+Results <- rbind(predDF4, results) 
 
 write.csv(Results, 'Results_predictions_TOP16_8_algorithms.csv', row.names=TRUE)
 
@@ -3762,28 +3769,32 @@ trainingSet <- samplesType[inTrain,] #85X17
 testingSet <- samplesType[-inTrain,] #36X17
 
 # Leave out the 'TYPE' outcome
-M <- abs(cor(training[,-1])) #16X16
+M <- abs(cor(trainingSet[,-1])) #16X16
 diag(M) <- 0
-which(M>0.75, arr.ind=T)#squeeze the limits until 2 left
-#       row col
-# ASPSCR1   13   6
-# CYTH4   6  13
+which(M>0.70, arr.ind=T)#squeeze the limits until 2 left
+# row col
+# GRIP1   8   2
+# BET1L   2   8
+
+colnames(trainingSet)
+# [1] "TYPE"    "ASPSCR1" "BET1L"   "CBX2"    "CBX7"    "CCDC57"  "CYTH4"   "FASN"    "GRIP1"  
+# [10] "HMGA2"   "KDELR3"  "PYCR1"   "RAC3"    "SOCS3"   "TH"      "TNRC6B"  "ZNF750" 
 
 png('plotScatter45_PCA_CYTH4_ASPSCR1.png')
-plot(trainingSet[,6], trainingSet[,13]) #scatter plot not showing on the 45 degree line,
+plot(trainingSet[,3], trainingSet[,9]) #scatter plot not showing on the 45 degree line,
 # if the plot did show the perfect or almost perfect alignment on the 45, then leave
 # these two genes out for PCA
 dev.off()
 
-cyth4ASPSCR1 <- trainingSet[, c(7,14)] #add a column for the one omitted in table of cor() above
-prComp <- prcomp(cyth4ASPSCR1)
+BET1L_Grip1 <- trainingSet[, c(4,10)] #add a column for the one omitted in table of cor() above
+prComp <- prcomp(BET1L_Grip1)
 
 plot(prComp$x[,1], prComp$x[,2]) #plots 1st principal component against 2nd 
 
 prComp$rotation # explains most variation by adding columns
-# PC1        PC2
-# CYTH4 -0.8063751 -0.5914044
-# ASPSCR1  -0.5914044  0.8063751
+# PC1       PC2
+# CBX2   0.7759054 0.6308492
+# HMGA2 -0.6308492 0.7759054
 
 typeColor <- unique(factor(trainingSet$TYPE)) #UL or nonUL, red or black
 prComp <- prcomp(trainingSet[,-1])#remove outcome field 'TYPE', add 1 for symm.
@@ -3798,61 +3809,18 @@ modelFit <- train(TYPE ~ .,
                   method='knn', preProcess=c('center','scale'),
                   tuneLength=10, trControl=trainControl(method='cv'), data=trainPC)
 testPC <- predict(preProc, testingSet[,-1])#36X2
-confusionMatrix(testingSet$TYPE, predict(modelFit, testPC)) #Accuracy of 56%
-# Confusion Matrix and Statistics
-# 
-# Reference
-# Prediction nonUL UL
-# nonUL     2 13
-# UL        3 18
-# 
-# Accuracy : 0.5556         
-# 95% CI : (0.381, 0.7206)
-# No Information Rate : 0.8611         
-# P-Value [Acc > NIR] : 1.00000        
-# 
-# Kappa : -0.0105        
-# 
-# Mcnemar's Test P-Value : 0.02445        
-#                                          
-#             Sensitivity : 0.40000        
-#             Specificity : 0.58065        
-#          Pos Pred Value : 0.13333        
-#          Neg Pred Value : 0.85714        
-#              Prevalence : 0.13889        
-#          Detection Rate : 0.05556        
-#    Detection Prevalence : 0.41667        
-#       Balanced Accuracy : 0.49032        
-#                                          
-#        'Positive' Class : nonUL          
-#                                        
-modelFit <- train(TYPE ~ ., 
-                  method='glm', data=trainPC) #list of 23
+confusionMatrix(testingSet$TYPE, predict(modelFit, testPC)) 
+
+modelFit <- train(TYPE ~ .,  
+                  method='glm', data=trainPC)
 
 testPC <- predict(preProc, testing[,-1])
-confusionMatrix(testing$TYPE, predict(modelFit, testPC)) #produces only 65% accuracy
-# Confusion Matrix and Statistics
-# 
-# Reference
-# Prediction nonUL UL
-# nonUL     3  9
-# UL        1 16
-# 
-# Accuracy : 0.6552          
-# 95% CI : (0.4567, 0.8206)
-# No Information Rate : 0.8621          
-# P-Value [Acc > NIR] : 0.99893         
-# 
-# Kappa : 0.212           
-# 
-# Mcnemar's Test P-Value : 0.02686 
-# 
-# install.packages('rpart')
+confusionMatrix(testingSet$TYPE, predict(modelFit, testPC)) 
 library(rpart)
 
 # same as above, but using 'rpart' method instead of 'glm':
-preProc <- preProcess(training, method='pca',pcaComp=2)#list of 21
-trainPC <- predict(preProc, training)#92X2
+preProc <- preProcess(trainingSet, method='pca',pcaComp=2)#list of 21
+trainPC <- predict(preProc, trainingSet)
 
 modelFit <- train(TYPE ~ ., 
                   method='rpart', tuneLength=9, data=trainPC) 
@@ -3860,53 +3828,23 @@ modelFit <- train(TYPE ~ .,
 testPC <- predict(preProc, testing[,-1])
 testPC
 
-confusionMatrix(testing$TYPE, predict(modelFit, testPC)) #accuracy of 48.28%
-# Confusion Matrix and Statistics
-# 
-# Reference
-# Prediction nonUL UL
-# nonUL     4  8
-# UL        7 10
-# 
-# Accuracy : 0.4828          
-# 95% CI : (0.2945, 0.6747)
-# No Information Rate : 0.6207          
-# P-Value [Acc > NIR] : 0.9557          
-# 
-# Kappa : -0.0794         
-# 
-# Mcnemar's Test P-Value : 1.0000          
-#                                           
-#             Sensitivity : 0.3636          
-#             Specificity : 0.5556          
-#          Pos Pred Value : 0.3333          
-#          Neg Pred Value : 0.5882          
-#              Prevalence : 0.3793          
-#          Detection Rate : 0.1379          
-#    Detection Prevalence : 0.4138          
-#       Balanced Accuracy : 0.4596          
-#                                           
-#        'Positive' Class : nonUL  
-# 
+confusionMatrix(testingSet$TYPE, predict(modelFit, testPC)) 
+
 # using lm, will run previous results, and 'wrong model type for classification':
-preProc <- preProcess(training, method='pca',pcaComp=2)#list of 21
-trainPC <- predict(preProc, training)#92X2
+preProc <- preProcess(trainingSet, method='pca',pcaComp=2)#list of 21
+trainPC <- predict(preProc, trainingSet)#92X2
 
 modelFit <- train(TYPE ~ ., 
                   method='lm',data=trainPC) 
 
-testPC <- predict(preProc, testing[,-1])
+testPC <- predict(preProc, testingSet[,-1])
 testPC
 
-confusionMatrix(testing$TYPE, predict(modelFit, testPC))
+confusionMatrix(testingSet$TYPE, predict(modelFit, testPC))
 
 
 
 
-# results of prediction using PCA and 'glm' or 'rpart' on the sample prediction by
-# gene values was 65% and 48% respectively. The previous predictions not using PCA
-# had 71%, 71%, 74%, and 68.57% for rf, gbm, and lda from the methods of rpart pkg, 
-# and the 68.57% was from the randomForest pkg using the randomForest()
 ####################################################################################
 #########################################################################################
 #########################################################################################
@@ -3922,7 +3860,21 @@ confusionMatrix(testing$TYPE, predict(modelFit, testPC))
 # for the top 10 and adding the six genes
 All <- read.csv('MemberMagnitude_130_142.csv', sep=',', header=TRUE,
                 na.string=c('','NA')) # 130 X 142
+head(colnames(All), 20)
+# [1] "genes"                         "chromosome"                    "type"                         
+# [4] "all"                           "up"                            "down"                         
+# [7] "majority"                      "start"                         "end"                          
+# [10] "width"                         "strand"                        "gene"                         
+# [13] "transcript"                    "GENE"                          "GENE_NAME"                    
+# [16] "CYTOBAND"                      "DESCRIPTION"                   "nonUL_Mean"                   
+# [19] "UL_Mean"                       "Difference_UL_minus_non_means"
 
+#make a table of HGNC names, cytoband, genes to merge with
+HGNC <- All[,c(1,11,15,16)]
+HGNC <- HGNC[,c(1,3,2,4)]
+row.names(HGNC) <- HGNC$genes
+HGNC <- HGNC[,-1]
+write.csv(HGNC,'hgnc_130.csv', row.names=TRUE)
 # The magnitude of gene expression change up or down between UL and nonUL samples is 
 # already sorted, choose the first 16 genes listed here as well as all the meta info
 # per gene to work with, without using simulated means or changes from mean of UL
@@ -3931,11 +3883,19 @@ All <- read.csv('MemberMagnitude_130_142.csv', sep=',', header=TRUE,
 magnitude <- All[1:16,c(1,21,22:142)] #16X123, samples, gene, and magnitude fields
 
 row.names(magnitude) <- magnitude$genes
-
+hg16 <- magnitude[,-2]
 all_16 <- magnitude[,-c(1:2)] #16X121, samples only, genes as row names
 
 all_16_t <- data.frame(t(all_16)) #121 samples by 16 genes having most change in UL
 
+HGNC <- read.csv('hgnc_130.csv', sep=',', header=TRUE)#gene,name descr.,strand,cytob. meta only
+
+hgnc_all_16 <- merge(HGNC, hg16,  by.x='X', by.y='genes')
+row.names(hgnc_all_16) <- hgnc_all_16$X
+
+hgnc <-hgnc_all_16[,c(2:4)]
+
+write.csv(hgnc, 'hgnc_best16_130.csv', row.names=TRUE)
 write.csv(all_16_t, 'top_16_overall.csv', row.names=TRUE)
 
 # use those previous algorithms on this set of 16 most differentially expressed genes
@@ -3963,19 +3923,18 @@ set.seed(189678345)
 
 inTrain <- createDataPartition(all_16$TYPE, p=0.7, list=FALSE)
 
-trainingSet <- all_16[inTrain,]#85X17
-testingSet <- all_16[-inTrain,]#36X17
+trainingSet <- all_16[inTrain,]
+testingSet <- all_16[-inTrain,]
 
 
-# latent dirichlet allocation model, best model with same results of 74%
 ldaMod <- train(TYPE~., method='lda', data=trainingSet)
 
 # run predictions on the testing set for the lda model
 predlda <- predict(ldaMod, testingSet)
 
 
-sum <- sum(predlda==testingSet$TYPE) #28
-accuracy_lda <- sum/length(testingSet$TYPE) # [1] 0.7777778
+sum <- sum(predlda==testingSet$TYPE)
+accuracy_lda <- sum/length(testingSet$TYPE) 
 
 
 # next best model with rf for random forest method of caret:
@@ -3983,22 +3942,22 @@ rfMod <- train(TYPE ~ ., method='rf', data=trainingSet)
 
 predRF <- predict(rfMod, testingSet)
 
-sum <- sum(predRF==testingSet$TYPE) #25
-accuracy_rfMod <- sum/length(testingSet$TYPE) # [1] 0.694
+sum <- sum(predRF==testingSet$TYPE) 
+accuracy_rfMod <- sum/length(testingSet$TYPE) 
 
 gbmMod <- train(TYPE~., method='gbm', data=trainingSet, verbose=FALSE )
 predGbm <- predict(gbmMod, testingSet)
-sum <- sum(predGbm==testingSet$TYPE)#24
-accuracy_gbmMod <- sum/length(testingSet$TYPE)#0.6666
+sum <- sum(predGbm==testingSet$TYPE)
+accuracy_gbmMod <- sum/length(testingSet$TYPE)
 
-predDF <- data.frame(predRF, predGbm, predlda, type=testingSet$TYPE)#36X4
+predDF <- data.frame(predRF, predGbm, predlda, type=testingSet$TYPE)
 
 CombinedModels <- train(type~., method='gam', data=predDF)
 CombinedPredictions <- predict(CombinedModels, predDF)
 CombinedPredictions
 
 accuracy_CombinedPredictions <- sum(CombinedPredictions==testingSet$TYPE)/
-  length(testingSet$TYPE)#0.77777777
+  length(testingSet$TYPE)
 
 rf2 <- randomForest(TYPE~., data=trainingSet, method='class')
 
@@ -4076,6 +4035,8 @@ colnames(predDF4)
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
 
+colnames(predDF4) <- c('RF','RF2','LDA','GBM','KNN','RPART','GLM','Combined','Type')
+namesResults <- c('RF','RF2','LDA','GBM','KNN','RPART','GLM','Combined','Type')
 results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_lda, 2), round(accuracy_gbmMod,2), 
              round(accuracy_KNN,2), round(accuracy_RPART,2),
@@ -4103,6 +4064,13 @@ All <- read.csv('MemberMagnitude_130_142.csv', sep=',', header=TRUE,
 magnitude <- All[115:130,c(1,21,22:142)] #16X123, samples, gene, and magnitude fields
 
 row.names(magnitude) <- magnitude$genes
+HGNC <- read.csv('hgnc_130.csv', sep=',', header=T)
+least_16 <- magnitude[,-2]
+hgnc_least <- merge(HGNC,least_16, by.x='X', by.y='genes')
+row.names(hgnc_least) <- hgnc_least$X
+hgnc_least <- hgnc_least[,-c(1,5:125)]
+
+write.csv(hgnc_least, 'hgnc_least_16_130.csv', row.names=TRUE)
 
 all_16 <- magnitude[,-c(1:2)] #16X121, samples only, genes as row names
 
@@ -4119,9 +4087,9 @@ TYPE <- rbind(non,ul)#121X1
 
 all_16 <- cbind(TYPE, all_16_t) #121X17
 colnames(all_16)
-# [1] "TYPE"     "PSMD13"   "DNAL4"    "ATHL1"    "CDHR5"    "SIGIRR"   "MRPL23"   "FOXK2"   
-# [9] "RASSF7"   "SIRT3"    "GRAP2"    "AATK"     "TH"       "TMEM184B" "WDR45L"   "KDELR3"  
-# [17] "GCGR"
+# [1] "TYPE"    "DCXR"    "TRIOBP"  "DDX17"   "RPL3"    "RASSF7"  "CD7"     "GAA"     "IFITM3" 
+# [10] "PICK1"   "TBCD"    "SIRT3"   "SLC16A8" "AZI1"    "BAIAP2"  "PLA2G6"  "SIRT7"  
+
 write.csv(all_16, 'least_DE16_ml_ready_130.csv', row.names=TRUE)
 library(caret)
 set.seed(189678345)
@@ -4240,6 +4208,8 @@ colnames(predDF4)
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
 
+namesResults <- c('RF','RF2','LDA','GBM', 'KNN','RPART','GLM','Combined','Type')
+colnames(predDF4) <- c('RF','RF2','LDA','GBM', 'KNN','RPART','GLM','Combined','Type')
 results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_lda, 2), round(accuracy_gbmMod,2), 
              round(accuracy_KNN,2), round(accuracy_RPART,2),
@@ -4325,18 +4295,13 @@ FOLD <- fold[order(fold$foldChange, decreasing=TRUE),]
 FOLD10 <- FOLD[1:10,]
 
 FOLD10$genes
-#[1] CANT1    ARHGDIA  SLC25A10 ATF4     CBX2   MRPL12   BET1L    ASPSCR1     NOL12    IRF7    
+#[1] RAC3    GRIP1   TH      ASCL2   CBX2    FSCN2   NPTX1   ASPSCR1 PYCR1   KDELR3 
 
-#BET1l is in the top 10 genes having the highest fold change
-# but none of the other six ubiquitous genes are in the top 10 of highest magnitude of change
-# or highest fold change
-# since, BET1L is already included, get the first 11, and grep() the other 5 ubuiquitous genes
-
-t <- grep('TNRC6B', FOLD$genes)#62
-cy <- grep('CYTH4', FOLD$genes)#29
-cc <- grep('CCDC57', FOLD$genes)#106
-F <- grep('FASN', FOLD$genes)#90
-H <- grep('HMGA2', FOLD$genes)#128
+t <- grep('TNRC6B', FOLD$genes)
+cy <- grep('CYTH4', FOLD$genes)
+cc <- grep('CCDC57', FOLD$genes)
+F <- grep('FASN', FOLD$genes)
+H <- grep('HMGA2', FOLD$genes)
 
 FOLD5 <- FOLD[c(t,cy,cc,F,H),]#5X143
 
@@ -4344,8 +4309,18 @@ FOLD11 <- FOLD[1:11,] #11X143
 
 TOP16_fold <- rbind(FOLD11, FOLD5) #16X143
 TOP16_fold$genes
-# [1] CANT1    ARHGDIA  SLC25A10 ATF4     CBX2   MRPL12   BET1L    ASPSCR1     NOL12    IRF7    
-# [11] DRD4     TNRC6B   CYTH4    CCDC57   FASN     HMGA2  
+# [1] RAC3     GRIP1    TH       ASCL2    CBX2     FSCN2    NPTX1    ASPSCR1  PYCR1    KDELR3  
+# [11] APOBEC3F TNRC6B   CYTH4    CCDC57   FASN     HMGA2   
+
+genesFold16 <- data.frame(TOP16_fold$genes)
+colnames(genesFold16) <- 'genes'
+
+HGNC <- read.csv('hgnc_130.csv', sep=',', header=T)
+
+hgnc_fold16 <- merge(genesFold16, HGNC, by.x='genes', by.y='X')
+colnames(hgnc_fold16) <- tolower(colnames(hgnc_fold16))
+
+write.csv(hgnc_fold16, 'hgnc_fold16_130.csv', row.names=FALSE)
 
 #This is a table of ml ready TOP16 by DE, made in other script
 samplesType <- read.csv('samplesType.csv', sep=',', header=TRUE, row.names=1) 
@@ -4369,7 +4344,7 @@ FOLD16_ml_ready <- cbind(TYPE,TOP16_fold_ml_t) #121X17
 
 #save FOLD16_ml_ready.csv and TOP16_ml_ready.csv for the DE selections
 write.csv(FOLD16_ml_ready, 'FOLD16_ml_ready.csv', row.names=TRUE)
-write.csv(samplesType, 'TOP16_ml_ready.csv', row.names=TRUE)
+write.csv(samplesType, 'TOP16_ml_ready.csv', row.names=TRUE)#top10+6
 
 #######################################################################
 
@@ -4378,6 +4353,8 @@ write.csv(samplesType, 'TOP16_ml_ready.csv', row.names=TRUE)
 fold <- read.csv('FOLD16_ml_ready.csv', sep=',', header=TRUE, row.names=1)
 colnames(fold)
 
+#install.packages('e1071')
+library(e1071)
 library(caret)
 library(randomForest)
 library(MASS)
@@ -4394,9 +4371,6 @@ inTrain <- createDataPartition(y=fold$TYPE, p=0.7, list=FALSE)
 
 trainingSet <- fold[inTrain,]#85X17
 testingSet <- fold[-inTrain,]#36X17
-
-#install.packages('e1071')
-library(e1071)
 
 # randomForest, cross-validation (cv) = 5
 rfMod <- train(TYPE~., method='rf', data=(trainingSet), 
@@ -4462,7 +4436,7 @@ accuracy_CombinedPredictions2 <- sum/length
 predDF3 <- data.frame(predRF, predRF2, predlda, predGbm, 
                       CombinedPredictions2, TYPE=testingSet$TYPE)
 
-results <- c(round(accuracy_rfMOd,2), round(accuracy_RF2,2), 
+results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
              round(accuracy_CombinedPredictions2,2), round(100,2))
 
@@ -4515,6 +4489,9 @@ colnames(predDF4)
 # [1] "predRF"               "predRF2"              "predlda"              "predGbm"             
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
+# search for namesResults prev and use as colnames
+
+colnames(predDF4) <- namesResults
 
 results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
@@ -4548,6 +4525,12 @@ up <- up[1:5,]
 majority10 <- rbind(down,up)
 row.names(majority10) <- majority10$genes
 
+HGNC <- read.csv('hgnc_130.csv', sep=',', header=TRUE)
+genes <- data.frame(majority10$genes)
+colnames(genes) <- 'genes'
+hgnc_maj10 <- merge(genes,HGNC, by.x='genes', by.y='X')
+write.csv(hgnc_maj10, 'hgnc_maj10.csv', row.names=FALSE)
+
 maj10 <- data.frame(t(majority10[,-c(1:21)]))#121X10, removes meta fields
 
 UL <- t(data.frame(rep('UL', 70)))
@@ -4561,9 +4544,8 @@ colnames(MAJ10)
 write.csv(MAJ10, 'majority_ml_ready_10_total.csv')
 
 colnames(MAJ10)
-# "SOCS3"    "TALDO1"   "ASCL2"    "HMGA2"    "PNPLA2"   "CBX2"   "CANT1"   
-# "ARHGDIA"  "NOL12"    "SLC25A10"
-
+# [1] "TYPE"    "EPS8L2"  "TNNI2"   "SCT"     "INS"     "RPLP2"   "KDELR3"  "GRIP1"   "MICALL1"
+# [10] "ADSL"    "MGAT3" 
 
 #Now the analytics can be done, using the same packages
 set.seed(189678345) # this will reproduce the same numbers each time sampling is done
@@ -4658,7 +4640,7 @@ knnMod <- train(TYPE ~ .,
 plot(knnMod)
 
 rpartMod <- train(TYPE ~ ., method='rpart', tuneLength=9, data=trainingSet) #lists 23
-plot(rpart)
+plot(rpartMod)
 
 glmMod <- train(TYPE ~ ., 
                 method='glm', data=trainingSet) #list of 23, 32 warnings
@@ -4692,6 +4674,8 @@ colnames(predDF4)
 # [1] "predRF"               "predRF2"              "predlda"              "predGbm"             
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
+#search namesResults if not in environment, copy and use here
+colnames(predDF4) <- namesResults
 
 results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
@@ -4711,32 +4695,84 @@ write.csv(Results,'Results_predictions_majority10_8_algorithms_used.csv',
 # the four cytoband locations, what genes are the top genes in fold change being the 
 # greatest in UL compared to non-UL?
 
-universeFold <- read.csv('orderedCommonMagnitude12173X129.csv', sep=',', header=TRUE, 
-                         na.strings=c('','NA'), row.names=1)#12173X129
+universeFold <- read.csv('DE_means_Per_Gene_Chr.csv', sep=',', header=TRUE, 
+                         na.strings=c('','NA'), row.names=1)#12173X124
+row.names(universeFold) <- universeFold$GENE_SYMBOL
+UF <- universeFold[,-c(1,3)]
+meta <- read.csv('GSE_array_meta.csv', sep=',', header=TRUE)
+meta <- meta[, c(7,8,10,14)]
+meta <- na.omit(meta)#25,268X4
+colnames(meta)
+
+# use the mart_export.txt file to merge strand to meta
+
+strand <- read.delim2('mart_export.txt', sep=',', header=TRUE,
+                      na.strings=c('','NA'))
+strand <- strand[,2:3]
+strand$Strand <- gsub('-1','-', strand$Strand)
+strand$Strand <- gsub('1','+', strand$Strand)
+
+metaHGNC <- merge(strand, meta, by.x='Transcript.stable.ID', by.y='ENSEMBL_ID')#21334X5
+
+write.csv(metaHGNC, 'metaHGNC.csv', row.names=FALSE)
+# colnames(metaHGNC)
+# # [1] "Transcript.stable.ID" "Strand"               "GENE_SYMBOL"          "GENE_NAME"           
+# # [5] "CYTOBAND"  
+# 
+# HGNC_meta <- merge(UF,metaHGNC, by.x='GENE_SYMBOL', by.y='GENE_SYMBOL')#14328X126
+# 
+# 
+# hgncAll <- HGNC_meta[!duplicated(HGNC_meta$GENE_SYMBOL),]#9670X126
+# 
+# library(dplyr)
+# 
+# all <- HGNC_meta %>% group_by(GENE_SYMBOL) %>% summarise(Counts=n()) # 9670 X 2
+# samples <- colnames(hgncAll[2:122])
+# samples <- as.vector(samples)
+# all2 <- HGNC_meta %>% group_by(GENE_SYMBOL) %>%  summarise_at(samples, 
+#                                                               mean, na.rm = TRUE)
+# # Genes <- merge(all2,all, by.x='GENE_SYMBOL', by.y='GENE_SYMBOL') 
+# 
+
+UF <- UF[,-1]#12173X121
+
+ul <- grep('UL', colnames(UF))#70
+UL <- UF[,ul]#12173X70
+non <- UF[,-ul]#12173X51
+
+nonUL_Mean <- data.frame(rowMeans(non))
+colnames(nonUL_Mean) <- 'nonUL_Mean'
+
+UL_Mean <- data.frame(rowMeans(UL))
+colnames(UL_Mean) <- 'UL_Mean'
+Means <- cbind(nonUL_Mean, UL_Mean)
 
 library(dplyr)
 
-universe <- mutate(universeFold, foldChange=UL_mean/nonUL_mean) #12173X130
-universe <- universe[,c(1:8,130,9:129)]
+DE <- mutate(Means, DE=UL_Mean-nonUL_Mean)
+DE <- round(DE,2)#12173X3
 
-write.csv(universe, 'all_common_12173_130_fold_magnitude.csv', row.names=TRUE)
+magnitude <- mutate(DE, Magnitude=abs(DE))#12173X4
+
+FC <- mutate(magnitude, foldChange=abs(UL_Mean/nonUL_Mean)) #12173X5
+FC <- round(FC,2)
+
+universe <- cbind(FC,UF)#12173X126
+
+write.csv(universe, 'universe_12173.csv', row.names=TRUE)
 
 universeOrdered <- universe[order(universe$foldChange, decreasing=TRUE),]
-row.names(universeOrdered) <- universe$GENE_SYMBOL
 
-# according to fold change rank following lineage from most fold change as 1, to least as 12,173:
-t <- grep('TNRC6B', universeOrdered$GENE_SYMBOL)#3841
-b <- grep('BET1L', universeOrdered$GENE_SYMBOL)#2100
-cy <- grep('CYTH4', universeOrdered$GENE_SYMBOL)#8848
-cc <- grep('CCDC57', universeOrdered$GENE_SYMBOL)#2585
-h <- grep('HMGA2', universeOrdered$GENE_SYMBOL)#253
-F <- grep('FASN', universeOrdered$GENE_SYMBOL)#2351
 
-universe16 <- universeOrdered[1:16,-c(1:9)]
+universe16 <- universeOrdered[1:16,-c(1:5)]
 
 universe_t <- data.frame(t(universe16)) # 121 X 16 genes
 
-row.names(universe_t) #they are ordered with the first 51 non-UL and next 70 UL samples
+ul <- grep('UL', row.names(universe_t))#70
+non <- universe_t[-ul,]#51X16
+ul <- universe_t[ul,]#70X16
+
+universe16 <- rbind(non,ul)#121X16, rows first 51 non, and next 70 UL
 
 # create the 'TYPE' field to identify each sample as UL or nonUL
 ul <- data.frame(TYPE=rep('UL', 70))
@@ -4746,17 +4782,66 @@ TYPE <- rbind(non,ul) #121X1
 # add the TYPE field to the universal 16 genes having the most fold change
 UNIVERSE <- cbind(TYPE, universe_t) #121X17
 
-write.csv(UNIVERSE, 'most_universe_fold.csv', row.names=TRUE)
+
+uni16 <- t(universe16)#16X121
+names <- row.names(uni16)
+genes <- data.frame(names)
+colnames(genes) <- 'genes'
+uni16 <- cbind(genes,uni16)
+
+hgnc16 <- merge(uni16[1], meta, by.x='genes', by.y='GENE_SYMBOL')#duplicate genes, some 16 omitted
+hgnc16 <- hgnc16[!duplicated(hgnc16$genes),]#it omits some of the genes, 13X4
+#DCX, FOLH1B, PLP1, get from genenames.org
+
+row.names(hgnc16) <- hgnc16$genes
+DCX <- meta[grep('DCX', meta$GENE_SYMBOL),]#11633
+row.names(DCX) <- 'DCX'
+colnames(DCX)[1] <- 'genes'
+grep('FOLH1B', meta$GENE_SYMBOL)#0,folate hydrolase 1B ,ENST00000525540, 11q14.3 ,+ strand
+PLP1 <- meta[grep('PLP1', meta$GENE_SYMBOL),]#7276  9711 25093, APLP1 and RPLP1, not PLP1
+# proteolipid protein 1 , Xq22.2, ENST00000612423, + strand
+
+PLP1 <- data.frame(c('PLP1','proteolipid protein 1','ENST00000612423', 'Xq22.2'))
+PLP1 <- data.frame(t(PLP1))
+row.names(PLP1) <- 'PLP1'
+FOLH1B <- data.frame(c('FOLH1B','folate hydrolase 1B', 'ENST00000525540', '11q14.3'))
+FOLH1B <- data.frame(t(FOLH1B))
+row.names(FOLH1B) <- 'FOLH1B'
+colnames(PLP1) <- colnames(hgnc16)
+colnames(FOLH1B) <- colnames(hgnc16)
+hgnc16 <- rbind(hgnc16,DCX)#14X4
+
+hgnc <- rbind (hgnc16, FOLH1B, PLP1)
+H16 <- merge(hgnc, strand, by.x='ENSEMBL_ID', by.y='Transcript.stable.ID')#dropped one,STMN2
+# and changed DCX to DCXR
+grep('STMN2', hgnc$genes)#12
+STMN2 <- hgnc[12,] #add + strand
+fwd <- data.frame(t('+'))
+colnames(fwd) <- 'Strand'
+row.names(fwd) <- 'STMN2'
+STMN2 <- cbind(STMN2,fwd)
+STMN2 <- STMN2[,c(3,1,2,4,5)]
+hgnc16 <- rbind(H16,STMN2)
+colnames(hgnc16) <- tolower(colnames(hgnc16))
+write.csv(hgnc16, 'hgnc16_topfold_universe.csv', row.names=FALSE)
+
+#the machine learning ready file data set:
+write.csv(UNIVERSE, 'most_universe_fold.csv', row.names=TRUE)#121X17
 
 colnames(UNIVERSE)
-# [1] "TYPE"    "HSPB1"   "DSTN"    "S100A6"  "CNN1"    "ACTG2"   "VIM"     "SPARCL1" "TPM2"    "ACTA2"  
-#[11] "PCP4"    "TAGLN"   "DES"     "RAMP1"   "CYR61"   "UBC"     "ACTB"
-
+# [1] "TYPE"     "FOLH1B"   "STMN2"    "TNN"      "AKR1B10"  "DCX"      "CAPN6"    "KIAA1199"
+# [9] "PLP1"     "PRL"      "IL17B"    "PPFIA4"   "GRP"      "CARTPT"   "GRIA2"    "CHI3L1"  
+# [17] "DLK1"
 #none of those genes are any of the six ubiquitous genes to UL risk studies nor are they
 #in the TOP16
 
 # Now see if these top fold change genes (16) are good predictors for UL or nonUL 
 # using the same algorithms
+library(e1071)
+library(caret)
+library(randomForest)
+library(MASS)
+library(gbm)
 
 set.seed(189678345) # this will reproduce the same numbers each time sampling is done
 # run set.seed value to get exact results, otherwise results differ
@@ -4884,7 +4969,8 @@ colnames(predDF4)
 # [1] "predRF"               "predRF2"              "predlda"              "predGbm"             
 # [5] "predKNN"              "predRPART"            "predGLM"              "CombinedPredictions2"
 # [9] "TYPE"
-
+namesResults <- c('RF','RF2','LDA','GBM','KNN','RPART','GLM','Combined','Type')
+colnames(predDF4) <- namesResults
 results <- c(round(accuracy_rfMod,2), round(accuracy_RF2,2), 
              round(accuracy_ldaMod, 2), round(accuracy_gbmMod,2), 
              round(accuracy_KNN,2), round(accuracy_RPART,2),
@@ -4904,20 +4990,54 @@ write.csv(Results,'Results_predictions_universe16_fold_8_algorithms_used.csv',
 # the four cytoband locations, what genes are the top genes in DE being the 
 # greatest in UL compared to non-UL?
 
-universeDE <- read.csv('all_common_12173_130_fold_magnitude.csv', 
+universeDE <- read.csv('universe_12173.csv' , 
                        sep=',', header=TRUE, 
-                       na.strings=c('','NA'), row.names=1)#12173X129
-
+                       na.strings=c('','NA'), row.names=1)#12173X126
+metaHGNC <- read.csv('metaHGNC.csv', sep=',', header=TRUE)
+colnames(metaHGNC)
+# [1] "Transcript.stable.ID" "Strand"               "GENE_SYMBOL"          "GENE_NAME"           
+# [5] "CYTOBAND"
 
 universeOrdered <- universeDE[order(universeDE$Magnitude, decreasing=TRUE),]
-row.names(universeOrdered) <- universeOrdered$GENE_SYMBOL
+names <- row.names(universeOrdered)
 
-universe16 <- universeOrdered[1:16,-c(1:9)]
+universe16 <- universeOrdered[1:16,-c(1:5)]
 
 universe_t <- data.frame(t(universe16)) # 121 X 16 genes
 
 row.names(universe_t) #they are ordered with the first 51 non-UL and next 70 UL samples
+colnames(universe_t)
+DE16 <- data.frame(colnames(universe_t))
+colnames(DE16) <- 'genes'
 
+hgnc <- merge(DE16, metaHGNC, by.x='genes', by.y='GENE_SYMBOL')
+hgnc <- hgnc[,c(1,4,3,5)]
+colnames(hgnc) <- tolower(colnames(hgnc))
+unique(hgnc$genes)#13, dropped 3
+
+hgnc <- hgnc[!duplicated(hgnc$genes),]
+
+sort(colnames(universe_t))
+# [1] "ACTA2"   "ACTB"    "ACTG2"   "CNN1"    "CYR61"   "DES"     "DSTN"    "HSPB1"   "PCP4"   
+# [10] "RAMP1"   "S100A6"  "SPARCL1" "TAGLN"   "TPM2"    "UBC"     "VIM"   
+sort(as.character(hgnc$genes))
+# [1] "ACTB"    "ACTG2"   "CNN1"    "DES"     "HSPB1"   "PCP4"    "RAMP1"   "S100A6"  "SPARCL1"
+# [10] "TAGLN"   "TPM2"    "UBC"     "VIM"  
+
+# ACTA2, CYR61, and DSTN from genenames.org
+ACTA <- data.frame(t(c('ACTA', 'actin alpha 2', '-', 'hs|10Q21.3')))
+CYR61 <- data.frame(t(c('CCN1', 'cellular communication network factor 1(formerly CYR61)', 
+             '+', 'hs|1p22.3')))
+DSTN <- data.frame(t(c('DSTN','destrin, actin depolymerizing factor','+','hs|20p12.1')))
+
+names <- colnames(hgnc)
+
+colnames(ACTA) <- names
+colnames(DSTN) <- names
+colnames(CYR61) <- names
+
+hgnc <- rbind(hgnc,ACTA,CYR61,DSTN)
+write.csv(hgnc,'hgnc_universe16_DE.csv', row.names=FALSE)
 # create the 'TYPE' field to identify each sample as UL or nonUL
 ul <- data.frame(TYPE=rep('UL', 70))
 non <- data.frame(TYPE=rep('nonUL',51))
