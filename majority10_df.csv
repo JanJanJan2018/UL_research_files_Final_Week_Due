@@ -1,0 +1,11 @@
+"genes","type","all","up","down","majority","strand","cytoband","diff_expr"
+"EPS8L2","down",33,16,17,"TRUE","+","hs|11p15.5",-0.5
+"TNNI2","down",33,16,17,"TRUE","+","hs|11p15.5",-0.48
+"SCT","down",33,16,17,"TRUE","-","hs|11p15.5",-0.36
+"INS","down",33,16,17,"TRUE","-","hs|11p15.5",-0.32
+"RPLP2","down",33,16,17,"TRUE","+","hs|11p15.5",-0.32
+"KDELR3","up",43,25,18,"TRUE","+","hs|22q13.1",0.72
+"GRIP1","up",6,5,1,"TRUE","-","hs|12q14.3",0.68
+"MICALL1","up",43,25,18,"TRUE","+","hs|22q13.1",0.58
+"ADSL","up",43,25,18,"TRUE","+","hs|22q13.1",0.43
+"MGAT3","up",43,25,18,"TRUE","+","hs|22q13.1",0.42

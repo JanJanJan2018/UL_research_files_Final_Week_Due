@@ -1867,19 +1867,25 @@ grtrack <- GeneRegionTrack(rev11, genome = "hg38", chromosome = chr[1],
                            transcriptAnnotation = "genes", #adds the genes to bottom track
                            background.title = "brown", lwd=1, cex=1,
                            stackHeight=0.5,
-                           name = "Reverse Strand Cytoband 11p15.5 of all Genes")
+                           name = "Reverse Strand Cytoband 11p15.5")
+aTrack <- AnnotationTrack(start = c(167784), 
+                          width = c(39645), 
+                          chromosome = "chr11", strand = "-", 
+                          group = "BET1L", 
+                          genome = "hg38",  name = "Reverse Strand")
 
 itrack <- IdeogramTrack(genome = "hg38", chromosome = chr[1])
 gtrack <- GenomeAxisTrack()
 
-png('allRevChr11.png',width=500,height=400)
-plotTracks(list(itrack, gtrack, grtrack),#omitted atrack--messy
-           featureAnnotation = "id",  lwd=1, cex=2,
-           shape='arrow',
+png('allRevChr11.png',width=768,height=576)
+plotTracks(list(itrack, aTrack, gtrack, grtrack),#omitted atrack--messy
+           featureAnnotation = "id",  lwd=1, cex=.8,
+           width=NULL, #shape='arrow', 
            background.panel = "beige", reverseStrand=FALSE, from = 1e+05, to = 3e+05,
-           # add35=TRUE, add53=TRUE, #adds 3' to 5' and 5' to 3' on ideogram header
+           add35=TRUE, ##  add53=TRUE, adds 3' to 5' and 5' to 3' on ideogram header
            showBandId = TRUE, cex.bands = 2,
-           scale=.5,showOverplotting=TRUE,
+           featureAnnotation=NULL, groupAnnotation = "group",
+           scale=.25,showOverplotting=TRUE,
            background.title = "#005544")# title color green-teal
 dev.off()
 
@@ -1892,19 +1898,25 @@ grtrack <- GeneRegionTrack(fwd12, genome = "hg38", chromosome = chr[3],
                            transcriptAnnotation = "genes", #adds the genes to bottom track
                            background.title = "brown", lwd=1, cex=1,
                            stackHeight=0.5,
-                           name = "Forward Strand Cytoband 12q14.3 All Genes")
+                           name = "Forward Strand Cytoband 12q14.3")
+aTrack <- AnnotationTrack(start = c(65824131), 
+                          width = c(142165), 
+                          chromosome = "chr12", strand = "+", 
+                          group = "HMGA2", 
+                          genome = "hg38",  name = "Forward Strand")
 
 itrack <- IdeogramTrack(genome = "hg38", chromosome = chr[3])
 gtrack <- GenomeAxisTrack()
 
 
-png('allFwdChr12.png',width=500,height=400)
-plotTracks(list(itrack, gtrack, grtrack),
-           featureAnnotation = "id", shape='arrow', lwd=1, cex=1,
+png('allFwdChr12.png',width=768,height=576)
+plotTracks(list(itrack, aTrack, gtrack, grtrack),
+           featureAnnotation = "id", lwd=1, cex=.8, #shape='arrow', 
            background.panel = "beige",
-           add35=TRUE, add53=TRUE, #adds 3' to 5' and 5' to 3' on ideogram header
+           add53=TRUE, #add35=TRUE, adds 3' to 5' and 5' to 3' on ideogram header
            showBandId = TRUE, cex.bands = 0.5, from = 6.5e+07, to = 6.7e+07,
-           scale=1,showOverplotting=TRUE,
+           featureAnnotation=NULL, groupAnnotation = "group",
+           scale=.25,showOverplotting=TRUE,
            background.title = "#005544")# title color green-teal
 dev.off()
 
@@ -1918,19 +1930,25 @@ grtrack <- GeneRegionTrack(rev, genome = "hg38", chromosome = chr[4],
                            transcriptAnnotation = "genes", #adds the genes to bottom track
                            background.title = "brown", lwd=1, cex=2,
                            stackHeight=0.5,
-                           name = "Reverse Strand 17.25q.3 All Genes")
+                           name = "Reverse Strand 17.25q.3")
+aTrack <- AnnotationTrack(start = c(82078338,82101460), 
+                          width = c(19957,111371), 
+                          chromosome = "chr17", strand = rep(c("-", "-"), c(1, 1)), 
+                          group = c("FASN", "CCDC57"), 
+                          genome = "hg38",  name = "Reverse Strand")
 
 itrack <- IdeogramTrack(genome = "hg38", chromosome = chr[4])
 gtrack <- GenomeAxisTrack()
 
 
-png('allGenesRevChr17.png',width=500,height=400)
-plotTracks(list(itrack, gtrack, grtrack),
-           featureAnnotation = "id", shape='arrow', lwd=1, cex=1,
-           background.panel = "beige", from = 8.15e+07, to = 8.3e+07,
-           add35=TRUE, add53=TRUE, #adds 3' to 5' and 5' to 3' on ideogram header
+png('allGenesRevChr17.png',width=768,height=576)
+plotTracks(list(itrack, aTrack, gtrack, grtrack),
+           featureAnnotation = "id", lwd=1, cex=.8, #shape='arrow',
+           background.panel = "beige", from = 8.19e+07, to = 8.23e+07,
+           add35=TRUE,  #adds 3' to 5' and 5' to 3' on ideogram header
            showBandId = TRUE, cex.bands = 0.5, reverseStrand=FALSE,
-           scale=1,showOverplotting=TRUE,
+           featureAnnotation=NULL, groupAnnotation = "group",
+           scale=.25, showOverplotting=TRUE,
            background.title = "#005544")# title color green-teal
 dev.off()
 
@@ -1943,28 +1961,77 @@ grtrack <- GeneRegionTrack(fwd, genome = "hg38", chromosome = chr[2],
                            transcriptAnnotation = "genes", #adds the genes to bottom track
                            background.title = "brown", lwd=1, cex=2,
                            stackHeight=0.5,
-                           name = "Forward Strand 22q13.1 All Genes")
+                           name = "Forward Strand 22q13.1")
 
 itrack <- IdeogramTrack(genome = "hg38", chromosome = chr[2])
 gtrack <- GenomeAxisTrack()
+aTrack <- AnnotationTrack(start = c(37282027,40044817), 
+                          width = c(33315,290992), 
+                          chromosome = "chr22", strand = rep(c("+", "+"), c(1, 1)), 
+                          group = c("CYTH4", "TNRC6B"), 
+                          genome = "hg38",  name = "Forward Strand")
+
+#plotTracks(aTrack, groupAnnotation = "group")
 
 
-png('fwdAllChr22.png',width=500,height=400)
-plotTracks(list(itrack, gtrack, grtrack),
-           featureAnnotation = "id", shape='arrow', lwd=1, cex=1,
-           background.panel = "beige", from = 3.7e+07, to = 4.1e+07,
-           add35=TRUE, add53=TRUE, #adds 3' to 5' and 5' to 3' on ideogram header
+png('fwdAllChr22.png',width=768,height=576)
+plotTracks(list(itrack, aTrack, gtrack, grtrack),
+           featureAnnotation = "id",  lwd=1, cex=.8, #shape='arrow',
+           background.panel = "beige", from = 3.7e+07, to = 4.05e+07,
+           add53=TRUE,  littleTicks = TRUE, labelPos='alternating',
+           #add35=TRUE,adds 3' to 5' and 5' to 3' on ideogram header
            showBandId = TRUE, cex.bands = 0.5, reverseStrand=FALSE,
-           scale=1,showOverplotting=TRUE,
+           scale=.25,showOverplotting=TRUE, 
+           featureAnnotation=NULL, groupAnnotation = "group",
            background.title = "#005544")# title color green-teal
 dev.off()
-
 
 # save to csv the allMembers data set of all meta with all genes 
 # in same cytobands of 6 UL risk genes
 write.csv(allMembers, 'MemberGviz_130_141.csv', row.names=FALSE) #111.5 kb
+#this is for the report, when testing re-did some things
+
+
 
 MemberGviz <- read.csv('MemberGviz_130_141.csv', sep=',', header=TRUE)#130X141
+
+# Make the data set for the majority group of 5 top up and top down, 10 top majority
+
+majority10 <- subset(MemberGviz, MemberGviz$majority=='TRUE')#47X141
+head(colnames(majority10),25)
+# [1] "genes"                         "chromosome"                   
+# [3] "type"                          "all"                          
+# [5] "up"                            "down"                         
+# [7] "majority"                      "start"                        
+# [9] "end"                           "width"                        
+# [11] "strand"                        "gene"                         
+# [13] "transcript"                    "GENE"                         
+# [15] "GENE_NAME"                     "CYTOBAND"                     
+# [17] "DESCRIPTION"                   "nonUL_Mean"                   
+# [19] "UL_Mean"                       "Difference_UL_minus_non_means"
+# 
+maj10 <- majority10[,c(1,3:7,11,16,20)]
+maj10_up <- subset(maj10, maj10$type=='up')#30X9
+maj10_up <- maj10_up[order(maj10_up$Difference_UL_minus_non_means, 
+                           decreasing=T),]
+maj10_down <- subset(maj10, maj10$type=='down')#17X98
+maj10_down <- maj10_down[order(maj10_down$Difference_UL_minus_non_means,
+                               decreasing=FALSE),]
+maj10_up5 <- maj10_up[1:5,]
+maj10_down5 <- maj10_down[1:5,]
+
+majority10_df <- rbind(maj10_down5,maj10_up5)#10X8
+colnames(majority10_df)[9] <- 'Diff_Expr'
+colnames(majority10_df) <- tolower(colnames(majority10_df))
+
+colnames(majority10_df)
+# [1] "genes"                         "type"                         
+# [3] "all"                           "up"                           
+# [5] "down"                          "majority"                     
+# [7] "strand"                        "diff_expr"                    
+# [9] "difference_ul_minus_non_means"write.csv(majority10_df,'majority10_df.csv', row.names=FALSE)
+
+write.csv(majority10_df, 'majority10_df.csv', row.names=F)
 
 B <- grep('BET1L', MemberGviz$genes) #2
 T <- grep('TNRC6B', MemberGviz$genes)#64
@@ -2101,7 +2168,7 @@ library(UsingR)
 set.seed(45623489)# set this seed so the sampling is the same output
 # Example:
 
-ZNF750 <- as.numeric(nonUL_t[,1]) # this gene, FSCN2, in the 51 nonUL samples
+ZNF750 <- as.numeric(nonUL_t[,1]) 
 n <- length(ZNF750)
 B <- 10000
 
@@ -2109,23 +2176,15 @@ resamples <- matrix(sample(ZNF750,n*B,replace=TRUE),B,n)#large matrix (51000 ele
 #10000 simulations X 51 samples, sampled and replaced in each matrix row and column
 
 resampledRowMeans <- apply(resamples, 1, mean) #num 1:10000 values, applies over rows,
-# each row simulates an independent, identical, replaced, sample 
-#from the 51 samples of FSCN2
 
 # get the column means for each sample spanning 10,000 simulated draws in sampling
-resampledColMeans <- apply(resamples,2,mean)# sample means of 10k simulated nonUL FSCN2 gene
-# numeric length 51
+resampledColMeans <- apply(resamples,2,mean)
 
 sd(resampledRowMeans)#[1] 0.23882 for the standard deviation of mean by row
 quantile(resampledRowMeans, c(0.025,0.975)) #confidence interval for 5% two tail distribution
-#   2.5%     97.5% 
-# 0.8768431 1.8205882 
 
 sd(resampledColMeans) # [1] 0.01619119, 
 quantile(resampledColMeans, c(0.025,0.975))
-#   2.5%    97.5% 
-# 1.325118 1.378639
-
 # plot histograms of the means by row, resampledRowMeans 
 # and means by columns, resampledColMeans
 
@@ -2176,8 +2235,6 @@ dev.off()
 
 sd(resampledRowMeans)#[1] 0.2157723 for the standard deviation of mean by row
 quantile(resampledRowMeans, c(0.025,0.9725)) #confidence interval for 5% two tail distribution
-#   2.5%     97.5% 
-# 0.1152786 0.9594429 
 
 ZNF750_ul_mean <- data.frame(mean(resampledRowMeans), row.names = 'ZNF750_ul')
 ZNF750_ul_sd <- data.frame(sd(resampledRowMeans), row.names='ZNF750_ul')
@@ -3042,6 +3099,72 @@ colnames(StatsGviz16)
 
 StatsGviz16 <- read.csv('Gviz16.csv', sep=',', header=TRUE, 
                         na.strings=c('', 'NA')) #32X146
+head(colnames(StatsGviz16),26)# the first 25 fields are meta fields
+
+
+##REPORT## Table 1 for report
+# HGNC, cytoband, gene top 10+6
+HGNC_16 <- StatsGviz16[,c(1,20,21)]
+HGNC_16 <- HGNC_16[!duplicated(HGNC_16$gene),]
+write.csv(HGNC_16,'Top10plus6_HGNC_130.csv', row.names=FALSE)
+
+library(dplyr)
+
+##REPORT## Table 2 for report
+# top 10 + 6 gene bootstrap simulated results
+Bootstrap16 <- StatsGviz16[,c(1:6)]
+non <- subset(Bootstrap16, Bootstrap16$ulStatus=='nonUL')
+ul <- subset(Bootstrap16, Bootstrap16$ulStatus=='UL')
+non <- non[,1:3]
+ul <- ul[1:3]
+colnames(non) <- c('gene', 'nonUL_simulated_mean','nonUL_std_dev')
+colnames(ul) <- c('gene', 'UL_simulated_mean','UL_std_dev')
+Bootstrap <- merge(non,ul,by.x='gene', by.y='gene')
+bootstrap <- mutate(Bootstrap, simmulated_magnitude_changed = 
+                      abs(UL_simulated_mean-nonUL_simulated_mean))
+row.names(bootstrap) <- bootstrap$gene
+Bootstrap16 <- round(bootstrap[2:6],2)
+write.csv(Bootstrap16,'bootstrap16.csv', row.names=TRUE)
+
+#compare real to simulated change per gene
+Sim_DE_16 <- data.frame(Bootstrap16[,5], row.names=row.names(Bootstrap16))
+colnames(Sim_DE_16) <- 'simm_Magn_change'
+real_DE_16 <- data.frame(StatsGviz16[,c(1,25)] )
+real16 <- real_DE_16[!duplicated(real_DE_16$gene),]
+real16$real_magn_change <- abs(real16$Difference_UL_minus_non_means)
+row.names(real16)<-real16$gene
+real16 <- data.frame(real16[,3], row.names=real16$gene)
+colnames(real16) <- 'real_magn_change'
+
+real_sim_results_16 <- cbind(real16, Sim_DE_16) #same values as real
+
+##REPORT## Table 3 for report
+# the majority, minority, cytoband, gene
+Maj_cytoband <- StatsGviz16[,c(1,8:12,21)]
+mc <- Maj_cytoband[!duplicated(Maj_cytoband$gene),]
+write.csv(mc,'Maj_cytoband.csv', row.names=FALSE)
+
+
+# make a separate data set of just the top 10 + 6 genes, remove the 2:25 meta fields, after
+# keeping only one of each gene. It will be transposed, and the double gene name was added
+# to identify simulated means/DE each type of UL or non-UL, the samples by genes is wanted
+
+Top10plus <- StatsGviz16[,-c(2:25)]#32X122
+Top10plus <- Top10plus[!duplicated(Top10plus$gene),]#16X122
+names16 <- Top10plus$gene
+Top10plus <- Top10plus[,-1] #remove gene field
+
+#transpose for pairwise comparison in lattice
+Top10plusT <- t(Top10plus)
+colnames(Top10plusT) <- names16 
+Top10plus_t <- data.frame(Top10plusT)#121X16
+
+##REPORT###
+# make a splom() of all the top 10 + 6 genes
+png('allTop10Plus6_splom.png', width=576, height=768)
+splom(Top10plus_t, main='Top 10 Plus 6 Genes Pairwise Comparison')
+dev.off()
+
 
 library(dplyr)
 
@@ -3059,12 +3182,14 @@ up_maj <- t(up_maj)
 names <- as.character(up_maj[1,])
 up_maj <- data.frame(up_maj)
 up_maj <- up_maj[-1,]
-colnames(up_maj) <- names #121X7 genes up regulated in majority of each chromosome
+colnames(up_maj) <- names #121X4 genes up regulated in majority of each chromosome
 
 
 down_maj <- filter(majorGroup, type=='down')
 unique(down_maj$gene)#majority of genes down-regulated
-#SOCS3 HMGA2
+# factor(0)
+# 16 Levels: ASPSCR1 BET1L CBX2 CBX7 CCDC57 
+# CYTH4 FASN GRIP1 HMGA2 KDELR3 PYCR1 RAC3 SOCS3 ... ZNF750
 
 down_maj <- down_maj[,-c(2:25)]
 down_maj <- down_maj[!duplicated(down_maj$gene),]
@@ -3083,13 +3208,13 @@ maj_latt <- data.frame(maj_latt)#122X9
 maj_latt <- maj_latt[-1,]#121X9
 colnames(maj_latt) <- names
 
-minorGroup <- filter(StatsGviz16, majority==FALSE) #14X146, 7 genes
+minorGroup <- filter(StatsGviz16, majority==FALSE) #14X146, 4 genes
 unique(minorGroup$gene)
-# BET1L    CCDC57   FASN     FSCN2    IRF7     ASPSCR1     SLC38A10
+#[1] BET1L CBX7  CYTH4 TH  
 
 up_min <- filter(minorGroup, type=='up')
 unique(up_min$gene)#minority of genes up-regulated
-#BET1L IRF7  ASPSCR1
+#[1] BET1L TH 
 
 up_min <- up_min[,-c(2:25)]
 up_min <- up_min[!duplicated(up_min$gene),]
@@ -3097,12 +3222,12 @@ up_min <- t(up_min)
 names <- as.character(up_min[1,])
 up_min <- data.frame(up_min)
 up_min <- up_min[-1,]
-colnames(up_min) <- names #121X3 genes up regulated in minority of each chromosome
+colnames(up_min) <- names #121X2 genes up regulated in minority of each chromosome
 
 
 down_min <- filter(minorGroup, type=='down')
 unique(down_min$gene)#minority of genes down-regulated
-#CCDC57   FASN     FSCN2    SLC38A10
+#[1] CBX7  CYTH4
 
 down_min <- down_min[,-c(2:25)]
 down_min <- down_min[!duplicated(down_min$gene),]
@@ -3110,38 +3235,39 @@ down_min <- t(down_min)
 names <- as.character(down_min[1,])
 down_min <- data.frame(down_min)
 down_min <- down_min[-1,]
-colnames(down_min) <- names #121X4
+colnames(down_min) <- names #121X2
 
-min_latt <- minorGroup[,-c(2:25)]#14X122
-min_latt <- min_latt[!duplicated(minorGroup$gene),]#7X122, gets rid of duplicates
-min_latt <- t(min_latt)#122X7
-names <- as.character(min_latt[1,])#7 values
-min_latt <- data.frame(min_latt)#122X7
-min_latt <- min_latt[-1,]#121X7
+min_latt <- minorGroup[,-c(2:25)]
+min_latt <- min_latt[!duplicated(minorGroup$gene),]
+min_latt <- t(min_latt)
+names <- as.character(min_latt[1,])
+min_latt <- data.frame(min_latt)
+min_latt <- min_latt[-1,]
 colnames(min_latt) <- names
 
 # Create a pairwise comparison plot with lattice
 library(lattice)
 
-png('up_maj_splom.png', width=1200, height=1200)
+png('up_maj_splom.png', width=576, height=768)
 splom(up_maj,
-      main="Genes in Majority Group for Up Gene Expression in Each Chromosome")
+      main="Genes in Majority Group for Up Gene Expression ")
 dev.off()
 
-# png('up_min_splom.png', width=900, height=900)#terrible looks like swastikas
-# splom(up_min,
-#       main="Genes in Minority Group for Up Gene Expression in Each Chromosome")
-# dev.off()
+png('up_min_splom.png', width=576, height=768)
+splom(up_min,
+      main="Genes in Minority Group for Up Gene Expression in Each Chromosome")
+dev.off()
 
-png('down_maj_splom.png', width=900, height=900)
+png('down_maj_splom.png', width=576, height=768)
 splom(down_maj,
       main="Genes in Majority Group for Down Gene Expression in Each Chromosome")
 dev.off()
 
-# png('down_min_splom.png', width=900, height=900)#terrible looks like swastikas
-# splom(down_min,
-#       main="Genes in Minority Group for Down Gene Expression in Each Chromosome")
-# dev.off()
+png('down_min_splom.png', width=576, height=768)
+splom(down_min,
+      main="Genes in Minority Group for Down Gene Expression in Each Chromosome")
+dev.off()
+
 
 # note for the most part there is a positive correlation, except for the randomness
 # in the minority group of up-regulated genes, and somewhat for the down regulated 
@@ -3163,31 +3289,18 @@ nonUL <- filter(StatsGviz16, ulStatus=='nonUL') #16X146
 # sort each by simulated standard deviation from lowest to highest
 UL_sd_sort <- UL[order(UL$simulatedSD10K, decreasing=FALSE),]
 UL_sd_sort$gene
-# [1] TNRC6B   ASPSCR1     IRF7     FASN     CBX2   NOL12    SLC38A10 CYTH4    SOCS3    HMGA2   
-# [11] ARHGDIA  FSCN2    BET1L    CANT1    SLC25A10 CCDC57
 
 nonUL_sd_sort <- nonUL[order(nonUL$simulatedSD10K),] #16X146 also increasing
 nonUL_sd_sort$gene
-# [1] TNRC6B   IRF7     ASPSCR1     NOL12    FASN     CBX2   SLC38A10 CANT1    BET1L    CYTH4   
-# [11] ARHGDIA  FSCN2    SLC25A10 SOCS3    HMGA2    CCDC57
 
 #sort by simulated mean
 UL_mean <- UL[order(UL$simulatedMean10k, decreasing=TRUE),]
 UL_mean$gene
-# [1] CYTH4    SLC38A10 IRF7     TNRC6B   NOL12    ASPSCR1     SOCS3    CCDC57   CBX2   BET1L   
-# [11] FASN     SLC25A10 ARHGDIA  CANT1    HMGA2    FSCN2 
 
 nonUL_mean <- nonUL[order(nonUL$simulatedMean10k, decreasing=TRUE),]
 nonUL_mean$gene
-# [1] SLC38A10 CYTH4    TNRC6B   IRF7     NOL12    SOCS3    ASPSCR1     CCDC57   CBX2   BET1L   
-# [11] FASN     SLC25A10 ARHGDIA  CANT1    HMGA2    FSCN2
 
-# from above the first 7 genes move around by neighboring genes in mean simulated expressions
-# between the two groups of UL or nonUL, but the last 9 genes stay the same for ranked
-# gene expression levels.
 
-# create a field for differential gene expression between the two groups of UL or nonUL
-# simulated means
 
 meanSimUL <- data.frame(UL$simulatedMean10k) #16X1
 meanSimNonUL <- data.frame(nonUL$simulatedMean10k)
@@ -3207,7 +3320,7 @@ SimDE16 <- cbind(SimDE, genes16_non, genes16_ul)#DE, non means and sd, ul means 
 SimDE16 <- data.frame(SimDE16)
 write.csv(SimDE16, 'SimDE16.csv', row.names=TRUE)
 
-png('heatmapTop16_DE_mean_sd_sims.png', width=500, height=700)
+png('heatmapTop16_DE_mean_sd_sims.png', width=576, height=768)
 heatmap(as.matrix(SimDE16), margins = c(8,7),#x-axis, y-axis label distance from grid
         cexCol = 1.1, cexRow = 1.1, keep.dendro=FALSE,
         main=NULL,
@@ -3224,7 +3337,7 @@ dev.off()
 library(ComplexHeatmap)
 
 #see the heatmap for the stats of 16 genes, DE, means, and sd using Heatmap()
-png('heatmap_SimDE16_stats.png', width=500, height=500)
+png('heatmap_SimDE16_stats.png', width=576, height=768)
 Heatmap(as.matrix(t(SimDE16)), cluster_columns = FALSE,
         row_names_side='left',
         row_dend_side = 'left',
@@ -3297,7 +3410,7 @@ Meta_DE_Stats <- merge(cyto, Meta_DE_Stats, by.x='genes', by.y='gene')
 write.csv(Meta_DE_Stats, 'metaGviz_DE_Stats_16.csv', row.names=FALSE)#16X17
 
 ##REPORT##
-png('Sim_UL_nonUL_means_chr.png', width=800, height=600)
+png('Sim_UL_nonUL_means_chr.png', width=576, height=768)
 g <- ggplot(Meta_DE_Stats, aes(x=Meta_DE_Stats$nonUL_means, y=Meta_DE_Stats$ul_means))
 g= g+xlab('Non-UL Simulated Mean Top 10 Plus 6 DE Genes')
 x=Meta_DE_Stats$ul_means
