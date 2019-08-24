@@ -22,7 +22,7 @@ library(dplyr)
 end50 <- mutate(thresh50_endocrine, expression=thresh50_endocrine$DE>0)
 end50$expression <- gsub('TRUE','up-regulated',end50$expression)
 end50$expression <- gsub('FALSE','down-regulated', end50$expression)
-
+write.csv(end50,'endocrineMost.csv', row.names=FALSE)
 library(ggplot2)
 
 png('endocrine_UL.png', width=768, height=576)
@@ -32,3 +32,33 @@ g= g+ ylab('Fold Change in UL to Non-UL')
 g= g+ geom_point(aes(colour=expression),size=6, alpha=0.9)
 g
 dev.off()
+
+expressionAll <- mutate(ENDOCRINE, expression=ENDOCRINE$DE>0)
+expressionAll$expression <- gsub('TRUE','up-regulated',expressionAll$expression)
+expressionAll$expression <- gsub('FALSE','down-regulated', expressionAll$expression)
+expressionAll <- expressionAll[,c(1:9,133,10:132)]
+write.csv(expressionAll, 'expression_All_endo_genes_UL.csv', row.names=FALSE)
+
+png('endocrine_allGenes_UL.png', width=768, height=576)
+g <- ggplot(expressionAll, aes(x=foldChange, y=as.factor(Gene)))
+g= g+ xlab('Fold Change in UL to Non-UL')
+g= g+ylab('Endocrine Genes')
+g= g+ geom_point(aes(colour=expression),size=6, alpha=0.9)
+g
+dev.off()
+
+
+expressionAll_inf <- mutate(INFLAMMATION, expression=INFLAMMATION$DE>0)
+expressionAll_inf$expression <- gsub('TRUE','up-regulated',expressionAll_inf$expression)
+expressionAll_inf$expression <- gsub('FALSE','down-regulated', expressionAll_inf$expression)
+expressionAll_inf <- expressionAll_inf[,c(1:9,133,10:132)]
+write.csv(expressionAll_inf, 'expression_All_endo_genes_UL.csv', row.names=FALSE)
+
+png('inflammation_allGenes_UL.png', width=768, height=576)
+g <- ggplot(expressionAll_inf, aes(x=foldChange, y=as.factor(Gene)))
+g= g+ xlab('Fold Change in UL to Non-UL')
+g= g+ylab('CBD Inflammation Pain Genes')
+g= g+ geom_point(aes(colour=expression),size=6, alpha=0.9)
+g
+dev.off()
+
