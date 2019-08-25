@@ -1,0 +1,50 @@
+Liu et al., 2018					Hans Chinese 7 authors
+Hellwege et al., 2017					African Americans (AA) 7+ authors
+Edwards, Hartmann, & Edwards, 2013		European Americans (EA)
+Bondagji et al., 2017					Saudi Arabians
+Aissani, Zhang, & Weiner, 2015				EA & AA
+Cha et al., 2011					Japanese
+Rafnar et al., 2018					Icelandic & AA UL assoc 7+ authors
+
+Eggert et al., 2012			non-race specific FASN UL study 7+ authors
+Hodge et al., 2012			non-race specific t(12;14) UL study 7+ authors
+Zhang, Sun, Ma, Dai, & Zhang, 2012 
+
+
+
+
+Crabtree et al., 2009			UL human and rat GEO db,7+authors
+GSE13319
+
+Hoffman, Milliken, Gregg, Davis, & Gregg, 2004		GEO db 5 authors, UL mechanisms GSE593
+
+Miyata et al., 2015			GEO db UL 7+ authors UL, nonUL, ULSarcoma
+GSE68295
+
+Quade, Mutter, & Morton, 2004		GEO db 3 authors,
+GSE764 (no article)
+
+Vanharante et al., 2006			GEO 7+ authors fumurate-hydratase deficient UL GSE
+GSE2724
+
+Zavadil et al., 2010			GEO 7+ authors mRNA on UL, 
+GSE23112
+
+
+Edgar, Domrachev, & Lash, 2019
+
+
+don't include: 
+Delaney et al., 2017			GSE95101,beadchip GEO db UL progesterone regulated, 7+ authors
+
+Teixeira, J.M. (2018). 			GSE120854, beadchip GEO db 
+
+
+
+Galili, T., O'Callaghan, A., Sidi, J., & Benjamin, Y. (2019). Package 'heatmaply.' Retrieved from https://cran.r-project.org/web/packages/heatmaply/heatmaply.pdf
+
+Hahne, F. (2019). The Gviz user guide. Retrieved from https://manualzz.com/doc/4237818/the-gviz-user-guide. 
+
+Yin, T. (2019). Ggbio: visualization toolkits for genomic data. Retrived from http://www.bioconductor.org/packages/release/bioc/vignettes/ggbio/inst/doc/ggbio.pdf
+
+Anders, S. & Huber, W. (2019). Differential expression of RNA-Seq data at the gene level -the DESeq package. Retrieved from https://bioconductor.org/packages/release/bioc/vignettes/DESeq/inst/doc/DESeq.pdf
